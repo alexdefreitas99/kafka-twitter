@@ -37,6 +37,9 @@ public class TwitterProducer {
         client.connect();
 
         KafkaProducer<String, String> kafkaProducer = createKafkaProducer();
+
+        System.out.println(ProducerConfig.configDef().defaultValues());
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Stopping application");
             System.out.println("Shutting down client from twitter");
@@ -91,6 +94,9 @@ public class TwitterProducer {
         props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         props.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+        props.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+
         return new KafkaProducer<>(props);
     }
 }
